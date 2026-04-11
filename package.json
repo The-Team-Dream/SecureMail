@@ -1,0 +1,20 @@
+{
+  "name": "Securemail",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev:flutter": "cd SecureMail-Flutter && flutter run",
+    "dev:services": "docker compose up postgres redis ai malware",
+    "dev:backend": "cd SecureMail-Backend && pnpm start:dev",
+    "dev:frontend": "cd SecureMail-Frontend && pnpm run dev",
+    "dev": "concurrently \"pnpm dev:backend\" \"pnpm dev:frontend\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.29.1",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
