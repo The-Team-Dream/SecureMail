@@ -1,0 +1,14 @@
+**/node_modules
+**/.next
+**/dist
+**/build
+**/.git
+**/.turbo
+**/coverage
+**/*.md
+!README.md
+**/.env
+**/.env.*
+!**/.env.example
+SecureMail-Flutter/.dart_tool
+SecureMail-Flutter/build

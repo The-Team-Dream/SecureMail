@@ -1,0 +1,88 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: securemail
+      POSTGRES_PASSWORD: securemail
+      POSTGRES_DB: securemail
+    ports:
+      - "5432:5432"
+    volumes:
+      - securemail_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U securemail -d securemail"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  ai:
+    build:
+      context: .
+      dockerfile: SecureMail-Ai/Dockerfile
+    environment:
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      GRPC_PORT: "50051"
+      AI_MAX_CONCURRENT: "4"
+    expose:
+      - "50051"
+
+  backend:
+    build:
+      context: .
+      dockerfile: SecureMail-Backend/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      ai:
+        condition: service_started
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      DATABASE_URL: postgresql://securemail:securemail@postgres:5432/securemail?schema=public
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      JWT_SECRET: ${JWT_SECRET:-docker-dev-change-me-use-openssl-rand-hex-32}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3001}
+      PUBLIC_API_URL: ${PUBLIC_API_URL:-http://localhost:3000}
+      AI_AGENT_GRPC_URL: ai:50051
+      MALWARE_ENGINE_GRPC_URL: ${MALWARE_ENGINE_GRPC_URL:-localhost:50052}
+    volumes:
+      - securemail_uploads:/app/uploads
+
+  frontend:
+    build:
+      context: .
+      dockerfile: SecureMail-Frontend/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3000}
+    depends_on:
+      - backend
+    ports:
+      - "3001:3000"
+    environment:
+      NODE_ENV: production
+
+  flutter-web:
+    profiles: ["flutter"]
+    build:
+      context: .
+      dockerfile: SecureMail-Flutter/Dockerfile
+      args:
+        API_BASE_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3000}
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend
+
+volumes:
+  securemail_pg:
+  securemail_uploads:

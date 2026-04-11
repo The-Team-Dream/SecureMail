@@ -1,0 +1,12 @@
+[submodule "SecureMail-Backend"]
+	path = SecureMail-Backend
+	url = https://github.com/The-Team-Dream/SecureMail-Backend.git
+[submodule "SecureMail-AI"]
+	path = SecureMail-AI
+	url = https://github.com/The-Team-Dream/SecureMail-AI.git
+[submodule "SecureMail-Frontend"]
+	path = SecureMail-Frontend
+	url = https://github.com/The-Team-Dream/SecureMail-Frontend.git
+[submodule "SecureMail-Flutter"]
+	path = SecureMail-Flutter
+	url = https://github.com/The-Team-Dream/SecureMail-Flutter.git
