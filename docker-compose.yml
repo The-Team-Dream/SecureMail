@@ -70,7 +70,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: "3000"
-      DATABASE_URL: postgresql://securemail:securemail@postgres:5432/securemail?schema=public
+      DATABASE_URL: postgresql://postgres:0000@postgres:5432/securemail?schema=public
       REDIS_HOST: redis
       REDIS_PORT: "6379"
       JWT_SECRET: ${JWT_SECRET:-docker-dev-change-me-use-openssl-rand-hex-32}
