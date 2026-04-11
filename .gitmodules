@@ -10,3 +10,6 @@
 [submodule "SecureMail-Flutter"]
 	path = SecureMail-Flutter
 	url = https://github.com/The-Team-Dream/SecureMail-Flutter.git
+[submodule "SecureMail-Malware"]
+	path = SecureMail-Malware
+	url = https://github.com/The-Team-Dream/SecureMail-Malware.git
