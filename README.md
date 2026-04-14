@@ -10,28 +10,35 @@ Monorepo for **SecureMail**: encrypted mail UX with security analysis, multi-cli
 │  (Next.js)  │                   │  Port 3000       │
 └─────────────┘                   └────────┬─────────┘
                                            │
-       ┌───────────────────────────────────┼───────────────────────┐
-       │ gRPC                              │ SQL      Redis        │
-       ▼                                   ▼          ▼              │
-┌─────────────┐                    ┌──────────┐  ┌────────┐          │
-│ SecureMail  │                    │ Postgres │  │ Redis  │          │
-│ AI (Python) │                    │ :5432    │  :6379  │          │
-│ :50051      │                    └──────────┘  └────────┘          │
-└─────────────┘                                                      │
-                                                                     │
-┌─────────────┐     HTTPS/REST (same API as web)                     │
-│  Flutter    │ ─────────────────────────────────────────────────────┘
-│  (iOS/Android/Web) │
-└────────────────────┘
+       ┌───────────────────────────────────┼────────────────────────┐
+       │ gRPC                              │ SQL      Redis         │
+       ▼                                   ▼          ▼             │
+┌─────────────┐                    ┌──────────┐  ┌────────┐         │
+│ SecureMail  │                    │ Postgres │  │ Redis  │         │
+│ AI (Python) │                    │ :5432    │  │ :6379  │         │
+│ :50051      │                    └──────────┘  └────────┘         │
+└─────────────┘                                                     │
+                                   gRPC                             │
+┌─────────────┐                    ┌──────────┐                     │
+│ SecureMail  │◄───────────────────┤          │                     │
+│ Malware (Go)│                    │          │                     │
+│ :50052      │                    └──────────┘                     │
+└─────────────┘                                                     │
+                                                                    │
+┌─────────────┐     HTTPS/REST (same API as web)                    │
+│  Flutter    │ ────────────────────────────────────────────────────┘
+│  (iOS/Android) │
+└────────────────┘
 ```
 
 | Component | Role |
 |-----------|------|
 | **SecureMail-Backend** | REST API, auth, mailboxes, security pipeline, Swagger/OpenAPI |
 | **SecureMail-Ai** | gRPC AI analysis (`GenerateReport`); Groq + LangChain |
+| **SecureMail-Malware** | gRPC malware scanner (Go stub) |
 | **SecureMail-Frontend** | Next.js web app |
-| **SecureMail-Flutter** | Mobile/desktop/web client (Dio, Riverpod, etc.) |
-| **contracts/ai-agent.proto** | Shared gRPC contract (source of truth for AI) |
+| **SecureMail-Flutter** | Mobile client (iOS/Android) |
+| **contracts/** | Shared gRPC contracts (source of truth for AI & Malware) |
 
 ## One-command run (Docker Compose)
 
@@ -50,7 +57,8 @@ docker compose up --build
 |---------|---------|---------|
 | **postgres** | `5432` | Database (`securemail` / `securemail`) |
 | **redis** | `6379` | Queues / cache (BullMQ, etc.) |
-| **ai** | `50051` (internal; not published by default) | gRPC AI agent |
+| **ai** | `50051` | gRPC AI agent |
+| **malware** | `50052` | gRPC malware scanner (Go) |
 | **backend** | `3000` | HTTP API + Swagger |
 | **frontend** | `3001` → container `3000` | Next.js production server |
 
@@ -58,8 +66,9 @@ docker compose up --build
 
 - **backend → postgres:** `DATABASE_URL` uses hostname `postgres`.
 - **backend → redis:** `REDIS_HOST=redis`.
-- **backend → ai:** `AI_AGENT_GRPC_URL=ai:50051` (Docker DNS service name `ai`).
-- **frontend → backend:** Browser calls `NEXT_PUBLIC_API_URL` (default `http://localhost:3000`). CORS uses `FRONTEND_URL` (default `http://localhost:3001`).
+- **backend → ai:** `AI_AGENT_GRPC_URL=ai:50051`.
+- **backend → malware:** `MALWARE_GRPC_URL=malware:50052`.
+- **frontend → backend:** Browser calls `NEXT_PUBLIC_API_URL` (default `http://localhost:3000`).
 
 ### Optional: Flutter Web (static build + nginx)
 
@@ -101,9 +110,11 @@ Serves the Flutter **web** build on **http://localhost:8080** (see `SecureMail-F
 
 - [SecureMail-Backend](./SecureMail-Backend/README.md)
 - [SecureMail-Ai](./SecureMail-Ai/README.md)
+- [SecureMail-Malware](./SecureMail-Malware/README.md)
 - [SecureMail-Frontend](./SecureMail-Frontend/README.md)
 - [SecureMail-Flutter](./SecureMail-Flutter/README.md)
+- [contracts](./contracts/README.md)
 
 ## Can everything run together?
 
-**Yes.** `docker compose up --build` starts **postgres**, **redis**, **ai**, **backend**, and **frontend** with compatible defaults. Blockers are only **configuration**: you must set a real **`JWT_SECRET`** for production-like auth, and **`GROQ_API_KEY`** if you need AI-generated reports (without it the AI container may start but analysis calls fail).
+**Yes.** `docker compose up --build` starts **postgres**, **redis**, **ai**, **malware**, **backend**, and **frontend** with compatible defaults.
