@@ -1,120 +1,81 @@
-# SecureMail
+# SecureMail Monorepo
 
-Monorepo for **SecureMail**: encrypted mail UX with security analysis, multi-client apps, and a NestJS API.
+Welcome to the **SecureMail** project, an encrypted mail experience featuring automated security analysis, unified microservices, and multi-platform clients.
 
-## Architecture overview
+## 🏗️ Architecture Overview
 
-```
-┌─────────────┐     HTTPS/REST    ┌──────────────────┐
-│  Frontend   │ ────────────────► │  Backend (Nest)  │
-│  (Next.js)  │                   │  Port 3000       │
-└─────────────┘                   └────────┬─────────┘
-                                           │
-       ┌───────────────────────────────────┼────────────────────────┐
-       │ gRPC                              │ SQL      Redis         │
-       ▼                                   ▼          ▼             │
-┌─────────────┐                    ┌──────────┐  ┌────────┐         │
-│ SecureMail  │                    │ Postgres │  │ Redis  │         │
-│ AI (Python) │                    │ :5432    │  │ :6379  │         │
-│ :50051      │                    └──────────┘  └────────┘         │
-└─────────────┘                                                     │
-                                   gRPC                             │
-┌─────────────┐                    ┌──────────┐                     │
-│ SecureMail  │◄───────────────────┤          │                     │
-│ Malware (Go)│                    │          │                     │
-│ :50052      │                    └──────────┘                     │
-└─────────────┘                                                     │
-                                                                    │
-┌─────────────┐     HTTPS/REST (same API as web)                    │
-│  Flutter    │ ────────────────────────────────────────────────────┘
-│  (iOS/Android) │
-└────────────────┘
-```
+The system consists of five main components coordinated as a unified monorepo:
 
-| Component | Role |
-|-----------|------|
-| **SecureMail-Backend** | REST API, auth, mailboxes, security pipeline, Swagger/OpenAPI |
-| **SecureMail-Ai** | gRPC AI analysis (`GenerateReport`); Groq + LangChain |
-| **SecureMail-Malware** | gRPC malware scanner (Go stub) |
-| **SecureMail-Frontend** | Next.js web app |
-| **SecureMail-Flutter** | Mobile client (iOS/Android) |
-| **contracts/** | Shared gRPC contracts (source of truth for AI & Malware) |
+- **SecureMail-Backend**: NestJS REST API (Auth, Mailboxes, Pipeline).
+- **SecureMail-Ai**: Python gRPC service for AI-powered email analysis (Groq + LangChain).
+- **SecureMail-Malware**: Go gRPC service for file scanning.
+- **SecureMail-Frontend**: Next.js (React) management dashboard.
+- **SecureMail-Flutter**: Mobile client for iOS, Android, and Web.
 
-## One-command run (Docker Compose)
+---
 
-From the **repository root** (where `docker-compose.yml` lives):
+## 🚀 Getting Started (Run Everything Together)
+
+There are two primary ways to run the full stack:
+
+### Method A: Turborepo (Recommended for Development)
+High-performance parallel orchestration of all services in a single terminal.
+
+1. **Start Infrastructure**:
+   ```bash
+   docker compose up -d postgres redis
+   ```
+2. **Launch All Services**:
+   ```bash
+   npm run dev  # Or pnpm dev
+   ```
+   *Available Filters:*
+   - `npm run dev:api`: Runs only Backend + AI + Malware.
+   - `npm run dev:ui`: Runs only the Frontend.
+
+### Method B: Docker Compose (Production-Like)
+Ideal for testing the entire environment with container isolation.
 
 ```bash
-cp .env.docker.example .env
-# Edit .env: set JWT_SECRET (required for auth); GROQ_API_KEY (required for AI reports to work)
-
 docker compose up --build
 ```
+> [!IMPORTANT]
+> Ensure you have configured your `.env` from `.env.docker.example` at the root.
 
-### Services, ports, and wiring
+---
 
-| Service | Port(s) | Purpose |
-|---------|---------|---------|
-| **postgres** | `5432` | Database (`securemail` / `securemail`) |
-| **redis** | `6379` | Queues / cache (BullMQ, etc.) |
-| **ai** | `50051` | gRPC AI agent |
-| **malware** | `50052` | gRPC malware scanner (Go) |
-| **backend** | `3000` | HTTP API + Swagger |
-| **frontend** | `3001` → container `3000` | Next.js production server |
+## 🛠️ Individual Service Execution
 
-**Networking**
+If you wish to run a specific service manually for debugging:
 
-- **backend → postgres:** `DATABASE_URL` uses hostname `postgres`.
-- **backend → redis:** `REDIS_HOST=redis`.
-- **backend → ai:** `AI_AGENT_GRPC_URL=ai:50051`.
-- **backend → malware:** `MALWARE_GRPC_URL=malware:50052`.
-- **frontend → backend:** Browser calls `NEXT_PUBLIC_API_URL` (default `http://localhost:3000`).
+| Service | Manual Command | Default Port |
+|---------|----------------|--------------|
+| **Backend** | `npm run start:dev` (in Backend folder) | `3000` |
+| **Frontend** | `npm run dev` (in Frontend folder) | `3001` |
+| **AI Agent** | `python app/main.py` (in AI folder) | `50051` |
+| **Malware** | `go run main.go` (in Malware folder) | `50052` |
+| **Flutter** | `flutter run` (in Flutter folder) | - |
 
-### Optional: Flutter Web (static build + nginx)
+---
 
-```bash
-docker compose --profile flutter up --build
-```
-
-Serves the Flutter **web** build on **http://localhost:8080** (see `SecureMail-Flutter/README.md`).
-
-## URLs (default local Compose)
+## 🔗 Internal Wiring & URLs
 
 | What | URL |
 |------|-----|
-| REST API base | http://localhost:3000 |
-| **Swagger UI** | http://localhost:3000/api/docs |
-| **OpenAPI JSON** | http://localhost:3000/api/docs-json |
-| Web app | http://localhost:3001 |
-| Flutter web (optional profile) | http://localhost:8080 |
-| Postgres | `localhost:5432` |
-| Redis | `localhost:6379` |
+| **REST API + Swagger** | http://localhost:3000/api/docs |
+| **Web Dashboard** | http://localhost:3001 |
+| **Flutter Web** | http://localhost:8080 (via Docker) |
+| **Postgres** | `localhost:5432` |
+| **Redis** | `localhost:6379` |
 
-## API documentation for client developers
+---
 
-- **Interactive docs:** open **Swagger UI** at `/api/docs` (try requests, copy `curl`).
-- **Machine-readable spec:** `GET /api/docs-json` — use for:
-  - **TypeScript / Next:** [openapi-typescript](https://github.com/drwpow/openapi-typescript) or [orval](https://orval.dev/).
-  - **Flutter/Dart:** [openapi_generator](https://pub.dev/packages/openapi_generator) or import the JSON into your generator of choice.
-- **Auth in Swagger:** click **Authorize**, paste `Bearer <access_token>` from `POST /auth/login` or `POST /auth/verify-2fa`.
-- **Response contract:** success payloads are wrapped as `{ success, message, data }`; errors as `{ success: false, statusCode, message, errors, path, timestamp }` (see Swagger description block).
+## 📄 Sub-Project Documentation
 
-## Production notes
-
-- Replace default `JWT_SECRET` and database credentials; use TLS in front of backend and frontend.
-- Set `GROQ_API_KEY` on the **ai** service or AI analysis will fail at runtime.
-- Point `NEXT_PUBLIC_API_URL` and `FRONTEND_URL` at your public URLs when deploying.
-- **Malware gRPC** is optional (`MALWARE_ENGINE_GRPC_URL`); pipeline degrades gracefully if the engine is unreachable.
-
-## Per-package docs
-
-- [SecureMail-Backend](./SecureMail-Backend/README.md)
-- [SecureMail-Ai](./SecureMail-Ai/README.md)
-- [SecureMail-Malware](./SecureMail-Malware/README.md)
-- [SecureMail-Frontend](./SecureMail-Frontend/README.md)
-- [SecureMail-Flutter](./SecureMail-Flutter/README.md)
-- [contracts](./contracts/README.md)
-
-## Can everything run together?
-
-**Yes.** `docker compose up --build` starts **postgres**, **redis**, **ai**, **malware**, **backend**, and **frontend** with compatible defaults.
+For deep dives into configuration and requirements, see individual READMEs:
+- [Backend Documentation](./SecureMail-Backend/README.md)
+- [AI Service Documentation](./SecureMail-Ai/README.md)
+- [Malware Service Documentation](./SecureMail-Malware/README.md)
+- [Frontend Documentation](./SecureMail-Frontend/README.md)
+- [Flutter Documentation](./SecureMail-Flutter/README.md)
+- [Contracts Documentation](./contracts/README.md)

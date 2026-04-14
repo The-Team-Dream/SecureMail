@@ -2,13 +2,18 @@
   "name": "Securemail",
   "version": "1.0.0",
   "description": "",
+  "workspaces": [
+    "SecureMail-*"
+  ],
   "main": "index.js",
   "scripts": {
-    "dev:flutter": "cd SecureMail-Flutter && flutter run",
-    "dev:services": "docker compose up postgres redis ai malware",
-    "dev:backend": "cd SecureMail-Backend && pnpm start:dev",
-    "dev:frontend": "cd SecureMail-Frontend && pnpm run dev",
-    "dev": "concurrently \"pnpm dev:backend\" \"pnpm dev:frontend\""
+    "dev": "npx turbo run dev",
+    "dev:api": "npx turbo run dev --filter=backend --filter=ai --filter=malware",
+    "dev:ui": "npx turbo run dev --filter=frontend",
+    "dev:flutter": "npx turbo run dev --filter=flutter-app",
+    "dev:services": "docker compose up postgres redis",
+    "build": "npx turbo run build",
+    "lint": "npx turbo run lint"
   },
   "keywords": [],
   "author": "",

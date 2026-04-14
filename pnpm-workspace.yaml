@@ -1,0 +1,6 @@
+packages:
+  - "SecureMail-Backend"
+  - "SecureMail-Frontend"
+  - "SecureMail-Ai"
+  - "SecureMail-Malware"
+  - "SecureMail-Flutter"
