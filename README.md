@@ -79,3 +79,8 @@ For deep dives into configuration and requirements, see individual READMEs:
 - [Frontend Documentation](./SecureMail-Frontend/README.md)
 - [Flutter Documentation](./SecureMail-Flutter/README.md)
 - [Contracts Documentation](./contracts/README.md)
+
+## 👥 Team Leadership
+
+- **Swilam** - Project Team Leader
+
