@@ -1,0 +1,200 @@
+# ════════════════════════════════════════════════════════════════════════════
+# SecureMail — ROOT docker-compose (Full Stack Orchestration)
+#
+# Starts ALL services on a shared Docker bridge network (securemail-net):
+#   - postgres        Internal: postgres:5432
+#   - redis           Internal: redis:6379
+#   - malware         Internal: malware:50052  (gRPC)
+#   - ai              Internal: ai:50051       (gRPC)
+#   - backend         Internal: backend:3000   | External: localhost:3000
+#   - frontend        Internal: frontend:3001  | External: localhost:3001
+#
+# Service startup order (enforced via depends_on + healthchecks):
+#   postgres, redis → backend
+#   ai, malware     → backend
+#   backend         → frontend
+#
+# Usage: docker compose up --build       (from repo root)
+#        docker compose up --build -d    (detached)
+#        docker compose logs -f backend  (follow logs)
+# ════════════════════════════════════════════════════════════════════════════
+
+name: securemail
+
+# ── Shared Network ────────────────────────────────────────────────────────────
+networks:
+  securemail-net:
+    driver: bridge
+    name: securemail-net
+
+# ── Persistent Volumes ────────────────────────────────────────────────────────
+volumes:
+  postgres_data:
+    name: securemail_postgres_data
+  redis_data:
+    name: securemail_redis_data
+  uploads_data:
+    name: securemail_uploads_data
+
+services:
+
+  # ── Infrastructure: PostgreSQL ────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: securemail-postgres
+    networks: [securemail-net]
+    environment:
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-0000}"
+      POSTGRES_DB: "${POSTGRES_DB:-securemail}"
+      POSTGRES_USER: "${POSTGRES_USER:-postgres}"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        - "CMD"
+        - "pg_isready"
+        - "-U"
+        - "${POSTGRES_USER:-postgres}"
+        - "-d"
+        - "${POSTGRES_DB:-securemail}"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  # ── Infrastructure: Redis ─────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: securemail-redis
+    networks: [securemail-net]
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ── gRPC: AI Agent Service ────────────────────────────────────────────────
+  ai:
+    build:
+      context: ./SecureMail-Ai
+      dockerfile: Dockerfile
+    container_name: securemail-ai
+    networks: [securemail-net]
+    env_file: ./SecureMail-Ai/.env.docker
+    # No external port — only accessible inside securemail-net
+    expose:
+      - "50051"
+    healthcheck:
+      test:
+        - "CMD"
+        - "python"
+        - "-c"
+        - "import socket, sys; s=socket.socket(); s.settimeout(3); r=s.connect_ex(('localhost', 50051)); s.close(); sys.exit(r)"
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 25s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+        reservations:
+          memory: 256m
+
+  # ── gRPC: Malware Scanner Service ─────────────────────────────────────────
+  malware:
+    build:
+      context: ./SecureMail-Malware
+      dockerfile: Dockerfile
+    container_name: securemail-malware
+    networks: [securemail-net]
+    env_file: ./SecureMail-Malware/.env.docker
+    # No external port — only accessible inside securemail-net
+    expose:
+      - "50052"
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 50052 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+        reservations:
+          memory: 64m
+
+  # ── Application: NestJS Backend ───────────────────────────────────────────
+  backend:
+    build:
+      context: ./SecureMail-Backend
+      dockerfile: Dockerfile
+    container_name: securemail-backend
+    networks: [securemail-net]
+    ports:
+      - "3000:3000"
+    env_file: ./SecureMail-Backend/.env.docker
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      ai:
+        condition: service_healthy
+      malware:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
+    volumes:
+      - uploads_data:/app/uploads
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+        reservations:
+          memory: 256m
+
+  # ── Application: Next.js Frontend ─────────────────────────────────────────
+  frontend:
+    build:
+      context: ./SecureMail-Frontend
+      dockerfile: Dockerfile
+      args:
+        # Browser-facing URL for the backend API.
+        # Must be accessible from the user's browser (via host port mapping).
+        # Not a Docker-internal URL — the browser is NOT inside the container.
+        NEXT_PUBLIC_API_URL: "http://localhost:3000"
+    container_name: securemail-frontend
+    networks: [securemail-net]
+    ports:
+      - "3001:3001"
+    env_file: ./SecureMail-Frontend/.env.docker
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3001/sign-in > /dev/null 2>&1 || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 45s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+        reservations:
+          memory: 128m
