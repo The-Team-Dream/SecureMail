@@ -109,11 +109,11 @@ If you wish to run a specific service manually for debugging:
 ## 📄 Sub-Project Documentation
 
 For deep dives into configuration and requirements, see individual READMEs:
-- [Backend Documentation](./SecureMail-Backend/README.md)
+- [Backend Documentation](https://github.com/The-Team-Dream/SecureMail-Backend/blob/f318f64449153b2469f1ce116c13dc7d1ab06945/README.md)
 - [AI Service Documentation](./SecureMail-Ai/README.md)
-- [Malware Service Documentation](./SecureMail-Malware/README.md)
-- [Frontend Documentation](./SecureMail-Frontend/README.md)
-- [Flutter Documentation](./SecureMail-Flutter/README.md)
+- [Malware Service Documentation](https://github.com/The-Team-Dream/SecureMail-Malware/blob/03c2dfca222efbf3eb9dc6793251725141c541f0/README.md)
+- [Frontend Documentation](https://github.com/The-Team-Dream/SecureMail-Frontend/blob/f649dda9278e9f6d60a0ec8b20acca2d84b0caf5/README.md)
+- [Flutter Documentation](https://github.com/The-Team-Dream/SecureMail-Flutter/blob/efa6c6eeb9bc9242027073f491fbe69686b28292/README.md)
 - [Contracts Documentation](./contracts/README.md)
 
 ## 👥 Team Leadership
