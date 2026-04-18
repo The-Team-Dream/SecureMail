@@ -74,6 +74,7 @@ venv/
 .packages
 
 # =====================
-# Turborepo
+# Turborepo & Cache
 # =====================
 .turbo/
+.cache/
