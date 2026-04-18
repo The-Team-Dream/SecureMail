@@ -100,7 +100,7 @@ If you wish to run a specific service manually for debugging:
 |------|-----|
 | **REST API + Swagger** | http://localhost:3000/api/docs |
 | **Web Dashboard** | http://localhost:3001 |
-| **Flutter** | Fluter mobile app emulator |
+| **Flutter** | Mobile App emulator |
 | **Postgres** | `localhost:5432` |
 | **Redis** | `localhost:6379` |
 
