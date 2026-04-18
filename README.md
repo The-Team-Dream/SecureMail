@@ -1,16 +1,52 @@
-# SecureMail Monorepo
+## 🛡️ The SecureMail Mission
+SecureMail is a production-grade, distributed security infrastructure designed to modernize email protection. It integrates static rule engines, high-performance binary scanning, and state-of-the-art AI reasoning into a unified, high-concurrency monorepo.
 
-Welcome to the **SecureMail** project, an encrypted mail experience featuring automated security analysis, unified microservices, and multi-platform clients.
+## 🏗️ Ecosystem Architecture
+The system is built on a "Defense in Depth" strategy where multiple specialized microservices collaborate to provide a 360-degree security verdict for every ingested email.
 
-## 🏗️ Architecture Overview
+```mermaid
+graph TD
+    subgraph "External World"
+        Sender[External Email Sender]
+    end
 
-The system consists of five main components coordinated as a unified monorepo:
+    subgraph "SecureMail Cloud (Turborepo)"
+        direction TB
+        Frontend[Frontend: Next.js SOC Dashboard]
+        Mobile[Mobile: Flutter Client]
+        
+        subgraph "Core Orchestration"
+            Backend[Backend: NestJS Secure Engine]
+            DB[(PostgreSQL: Prisma)]
+            Queue[(Redis: BullMQ)]
+        end
 
-- **SecureMail-Backend**: NestJS REST API (Auth, Mailboxes, Pipeline).
-- **SecureMail-Ai**: Python gRPC service for AI-powered email analysis (Groq + LangChain).
-- **SecureMail-Malware**: Go gRPC service for file scanning.
-- **SecureMail-Frontend**: Next.js (React) management dashboard.
-- **SecureMail-Flutter**: Mobile client for iOS, Android, and Web.
+        subgraph "Specialized Analysis Agents"
+            direction LR
+            AI[AI Agent: Python/Groq]
+            Malware[Malware: Go Scanner]
+        end
+    end
+
+    Sender -->|SMTP/IMAP| Backend
+    Backend -->|Persistence| DB
+    Backend -->|Jobs| Queue
+    Backend -->|gRPC: Analysis| AI
+    Backend -->|gRPC: File Scan| Malware
+    
+    Frontend -->|REST/WS| Backend
+    Mobile -->|REST| Backend
+```
+
+## 🧩 Microservice Interconnectivity
+
+| Component | Technology | Role | Communication |
+| :------- | :------- | :--- | :----------- |
+| **SecureMail-Backend** | NestJS/TS | Logic Orchestrator | REST (API), WebSocket (Live), gRPC (Client) |
+| **SecureMail-Frontend** | Next.js 16 | SOC Dashboard | REST / WebSocket Client |
+| **SecureMail-Ai** | Python/Groq | Deep AI Reasoning | gRPC Server |
+| **SecureMail-Malware** | Go 1.24 | Binary Scanning | gRPC Server |
+| **SecureMail-Flutter** | Flutter/Dart | Mobile Security UX | REST API Client |
 
 ---
 
