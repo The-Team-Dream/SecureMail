@@ -1,8 +1,25 @@
-## 🛡️ The SecureMail Mission
-SecureMail is a production-grade, distributed security infrastructure designed to modernize email protection. It integrates static rule engines, high-performance binary scanning, and state-of-the-art AI reasoning into a unified, high-concurrency monorepo.
+# SecureMail 🛡️
+
+> A production-grade, distributed email security platform built on a "Defense in Depth" strategy — integrating static rule engines, high-performance binary scanning, and state-of-the-art AI reasoning into a unified high-concurrency system.
+
+---
+
+## 📋 Table of Contents
+
+- [Ecosystem Architecture](#-ecosystem-architecture)
+- [Microservices Overview](#-microservices-overview)
+- [Quick Start — Full Stack](#-quick-start----full-stack)
+- [What Does the Setup Script Do?](#-what-does-the-setup-script-do)
+- [Development Mode (Turborepo)](#-development-mode-turborepo)
+- [Individual Service Execution](#-individual-service-execution)
+- [Internal URLs & Ports](#-internal-urls--ports)
+- [Sub-Project Documentation](#-sub-project-documentation)
+
+---
 
 ## 🏗️ Ecosystem Architecture
-The system is built on a "Defense in Depth" strategy where multiple specialized microservices collaborate to provide a 360-degree security verdict for every ingested email.
+
+The system is built as a **Turborepo monorepo** where specialized microservices collaborate to deliver a 360-degree security verdict for every ingested email.
 
 ```mermaid
 graph TD
@@ -14,7 +31,7 @@ graph TD
         direction TB
         Frontend[Frontend: Next.js SOC Dashboard]
         Mobile[Mobile: Flutter Client]
-        
+
         subgraph "Core Orchestration"
             Backend[Backend: NestJS Secure Engine]
             DB[(PostgreSQL: Prisma)]
@@ -33,90 +50,201 @@ graph TD
     Backend -->|Jobs| Queue
     Backend -->|gRPC: Analysis| AI
     Backend -->|gRPC: File Scan| Malware
-    
+
     Frontend -->|REST/WS| Backend
     Mobile -->|REST| Backend
 ```
 
-## 🧩 Microservice Interconnectivity
+---
 
-| Component | Technology | Role | Communication |
-| :------- | :------- | :--- | :----------- |
-| **SecureMail-Backend** | NestJS/TS | Logic Orchestrator | REST (API), WebSocket (Live), gRPC (Client) |
-| **SecureMail-Frontend** | Next.js 16 | SOC Dashboard | REST / WebSocket Client |
-| **SecureMail-Ai** | Python/Groq | Deep AI Reasoning | gRPC Server |
-| **SecureMail-Malware** | Go 1.24 | Binary Scanning | gRPC Server |
-| **SecureMail-Flutter** | Flutter/Dart | Mobile Security UX | REST API Client |
+## 🧩 Microservices Overview
+
+| Service | Technology | Role | Communication |
+|---|---|---|---|
+| **SecureMail-Backend** | NestJS / TypeScript | Core orchestrator & security pipeline | REST, WebSocket, gRPC client |
+| **SecureMail-Frontend** | Next.js 16 | SOC Dashboard for end-users | REST / WebSocket |
+| **SecureMail-Ai** | Python / Groq | Deep AI threat reasoning | gRPC server |
+| **SecureMail-Malware** | Go 1.24 | Binary attachment scanning | gRPC server |
+| **SecureMail-Flutter** | Flutter / Dart | Mobile security client | REST |
 
 ---
 
-## 🚀 Getting Started (Run Everything Together)
+## 🚀 Quick Start — Full Stack
 
-There are two primary ways to run the full stack:
+### Prerequisites
 
-### Method A: Turborepo (Recommended for Development)
-High-performance parallel orchestration of all services in a single terminal.
+- **Docker Desktop** installed and running → [Download here](https://www.docker.com/products/docker-desktop/)
+- **Git** installed → [Download here](https://git-scm.com/)
 
-1. **Start Infrastructure**:
-   ```bash
-   docker compose up -d postgres redis
-   ```
-2. **Launch All Services**:
-   ```bash
-   npm run dev  # Or pnpm dev
-   ```
-   *Available Filters:*
-   - `npm run dev:api`: Runs only Backend + AI + Malware.
-   - `npm run dev:ui`: Runs only the Frontend.
+---
 
-### Method B: Docker Compose (Production-Like)
-Ideal for testing the entire environment with container isolation.
+### Step 1 — Clone all repositories
 
 ```bash
-docker compose up --build
+git clone https://github.com/The-Team-Dream/Securemail.git
+cd Securemail
+git submodule update --init --recursive
 ```
-> [!IMPORTANT]
-> Ensure you have configured your `.env` from `.env.docker.example` at the root.
 
 ---
 
-## 🛠️ Individual Service Execution
+### Step 2 — Run the setup script
 
-If you wish to run a specific service manually for debugging:
+**On Windows** — double-click `setup.bat` or run in terminal:
+```
+setup.bat
+```
 
-| Service | Manual Command | Default Port |
-|---------|----------------|--------------|
-| **Backend** | `npm run start:dev` (in Backend folder) | `3000` |
-| **Frontend** | `npm run dev` (in Frontend folder) | `3001` |
-| **AI Agent** | `python app/main.py` (in AI folder) | `50051` |
-| **Malware** | `go run main.go` (in Malware folder) | `50052` |
-| **Flutter** | `flutter run` (in Flutter folder) | - |
+**On Mac / Linux:**
+```bash
+chmod +x setup.sh
+./setup.sh
+```
 
 ---
 
-## 🔗 Internal Wiring & URLs
+### Step 3 — Done ✅
 
-| What | URL |
-|------|-----|
+| | URL |
+|---|---|
+| **Web Dashboard** | http://localhost:3001 |
+| **REST API** | http://localhost:3000 |
+| **Swagger Docs** | http://localhost:3000/api/docs |
+| **Health Check** | http://localhost:3000/health |
+
+---
+
+## 🔧 What Does the Setup Script Do?
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│               setup.sh / setup.bat                           │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  ① Checks that Docker is running                             │
+│     └── If not → tells you to start Docker Desktop          │
+│                                                              │
+│  ② Verifies all service folders exist                        │
+│     └── Backend, Frontend, Ai, Malware                      │
+│                                                              │
+│  ③ Creates .env.docker files from examples                   │
+│     └── One per service, only if they don't exist yet        │
+│                                                              │
+│  ④ Asks you for a PostgreSQL password                        │
+│     └── Press Enter → uses "0000" as default                 │
+│     └── Type anything → uses what you typed                  │
+│                                                              │
+│  ⑤ Writes the password into two places:                      │
+│     └── Root .env  → docker-compose.yml reads it            │
+│     └── SecureMail-Backend/.env.docker → DATABASE_URL        │
+│                                                              │
+│  ⑥ Reminds you about optional secrets                        │
+│     └── GROQ_API_KEY, SMTP, OAuth, Cloudinary, etc.         │
+│                                                              │
+│  ⑦ Starts Docker Compose                                     │
+│     └── Builds all images                                    │
+│     └── Starts all 6 containers in the correct order        │
+│                                                              │
+│  ⑧ Waits for the backend to be ready                        │
+│     └── Watches for Prisma migrations to complete            │
+│                                                              │
+│  ⑨ Prints the final URLs                                     │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🛠️ Development Mode (Turborepo)
+
+Use this for active coding with hot reload across all services.
+
+**Prerequisites:** Node.js v22+, pnpm, Go 1.24+, Python 3.11+, Docker (for postgres & redis)
+
+```bash
+# Start infrastructure only
+docker compose up -d postgres redis
+
+# Run all services in parallel
+pnpm dev
+
+# Or run specific groups
+pnpm dev:api     # Backend + AI + Malware
+pnpm dev:ui      # Frontend only
+```
+
+---
+
+## ⚙️ Individual Service Execution
+
+For debugging a specific service in isolation:
+
+| Service | Command | Port |
+|---|---|---|
+| **Backend** | `pnpm start:dev` inside `SecureMail-Backend/` | `3000` |
+| **Frontend** | `pnpm dev` inside `SecureMail-Frontend/` | `3001` |
+| **AI Agent** | `python app/main.py` inside `SecureMail-Ai/` | `50051` |
+| **Malware** | `go run main.go` inside `SecureMail-Malware/` | `50052` |
+| **Flutter** | `flutter run` inside `SecureMail-Flutter/` | — |
+
+---
+
+## 🔗 Internal URLs & Ports
+
+| Service | URL / Address |
+|---|---|
 | **REST API + Swagger** | http://localhost:3000/api/docs |
 | **Web Dashboard** | http://localhost:3001 |
-| **Flutter** | Mobile App emulator |
-| **Postgres** | `localhost:5432` |
+| **Flutter** | Mobile emulator |
+| **PostgreSQL** | `localhost:5432` |
 | **Redis** | `localhost:6379` |
+| **AI gRPC** | `localhost:50051` (internal only) |
+| **Malware gRPC** | `localhost:50052` (internal only) |
 
 ---
 
 ## 📄 Sub-Project Documentation
 
-For deep dives into configuration and requirements, see individual READMEs:
-- [Backend Documentation](https://github.com/The-Team-Dream/SecureMail-Backend/blob/f318f64449153b2469f1ce116c13dc7d1ab06945/README.md)
-- [AI Service Documentation](https://github.com/The-Team-Dream/SecureMail-Ai/blob/53fb0c5e5202e3eecd5514b737726506938f2c54/README.md)
-- [Malware Service Documentation](https://github.com/The-Team-Dream/SecureMail-Malware/blob/03c2dfca222efbf3eb9dc6793251725141c541f0/README.md)
-- [Frontend Documentation](https://github.com/The-Team-Dream/SecureMail-Frontend/blob/f649dda9278e9f6d60a0ec8b20acca2d84b0caf5/README.md)
-- [Flutter Documentation](https://github.com/The-Team-Dream/SecureMail-Flutter/blob/efa6c6eeb9bc9242027073f491fbe69686b28292/README.md)
+Each service has its own README with detailed configuration and setup instructions:
+
+- [Backend Documentation](./SecureMail-Backend/README.md)
+- [AI Service Documentation](./SecureMail-Ai/README.md)
+- [Malware Service Documentation](./SecureMail-Malware/README.md)
+- [Frontend Documentation](./SecureMail-Frontend/README.md)
+- [Flutter Documentation](./SecureMail-Flutter/README.md)
 - [Contracts Documentation](./contracts/README.md)
 
-## 👥 Team Leadership
+---
 
-- **Swilam** - Project Team Leader
+## ⚠️ Troubleshooting
 
+### AI service is unhealthy
+
+The `nc` command isn't available in the Python image. The healthcheck uses Python's socket module instead — this is already handled in the `docker-compose.yml`.
+
+### Backend fails to connect to database
+
+```bash
+docker compose down -v
+./setup.sh
+```
+
+### View logs for a specific service
+
+```bash
+docker compose logs -f backend
+docker compose logs -f ai
+docker compose logs -f malware
+docker compose logs -f frontend
+```
+
+### Stop everything
+
+```bash
+docker compose down        # Stop containers
+docker compose down -v     # Stop + delete all data
+```
+
+---
+
+Built with ❤️ by the SecureMail Team — Led by **Swilam**
