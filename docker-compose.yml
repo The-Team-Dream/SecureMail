@@ -14,8 +14,8 @@
 #   ai, malware     → backend
 #   backend         → frontend
 #
-# Usage: docker compose up --build       (from repo root)
-#        docker compose up --build -d    (detached)
+# Usage: ./setup.sh        (first time)
+#        docker compose up --build -d    (after setup)
 #        docker compose logs -f backend  (follow logs)
 # ════════════════════════════════════════════════════════════════════════════
 
@@ -86,15 +86,10 @@ services:
     container_name: securemail-ai
     networks: [securemail-net]
     env_file: ./SecureMail-Ai/.env.docker
-    # No external port — only accessible inside securemail-net
     expose:
       - "50051"
     healthcheck:
-      test:
-        - "CMD"
-        - "python"
-        - "-c"
-        - "import socket, sys; s=socket.socket(); s.settimeout(3); r=s.connect_ex(('localhost', 50051)); s.close(); sys.exit(r)"
+      test: ["CMD-SHELL", "nc -z localhost 50051 || exit 1"]
       interval: 15s
       timeout: 5s
       retries: 5
@@ -115,7 +110,6 @@ services:
     container_name: securemail-malware
     networks: [securemail-net]
     env_file: ./SecureMail-Malware/.env.docker
-    # No external port — only accessible inside securemail-net
     expose:
       - "50052"
     healthcheck:
@@ -152,7 +146,7 @@ services:
       malware:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
       interval: 15s
       timeout: 5s
       retries: 5
@@ -173,9 +167,6 @@ services:
       context: ./SecureMail-Frontend
       dockerfile: Dockerfile
       args:
-        # Browser-facing URL for the backend API.
-        # Must be accessible from the user's browser (via host port mapping).
-        # Not a Docker-internal URL — the browser is NOT inside the container.
         NEXT_PUBLIC_API_URL: "http://localhost:3000"
     container_name: securemail-frontend
     networks: [securemail-net]
