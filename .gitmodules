@@ -1,15 +1,20 @@
 [submodule "SecureMail-Backend"]
 	path = SecureMail-Backend
 	url = https://github.com/The-Team-Dream/SecureMail-Backend.git
+	branch = main
 [submodule "SecureMail-Ai"]
 	path = SecureMail-Ai
 	url = https://github.com/The-Team-Dream/SecureMail-Ai.git
+	branch = main
 [submodule "SecureMail-Frontend"]
 	path = SecureMail-Frontend
 	url = https://github.com/The-Team-Dream/SecureMail-Frontend.git
+	branch = main
 [submodule "SecureMail-Flutter"]
 	path = SecureMail-Flutter
 	url = https://github.com/The-Team-Dream/SecureMail-Flutter.git
+	branch = main
 [submodule "SecureMail-Malware"]
 	path = SecureMail-Malware
 	url = https://github.com/The-Team-Dream/SecureMail-Malware.git
+	branch = main
