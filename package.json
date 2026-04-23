@@ -8,9 +8,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "npx turbo run dev",
-    "dev:api": "npx turbo run dev --filter=backend --filter=ai --filter=malware",
-    "dev:ui": "npx turbo run dev --filter=frontend",
-    "dev:flutter": "npx turbo run dev --filter=flutter-app",
+    "dev:backend": "npx turbo run dev --filter=backend --filter=ai --filter=malware",
+    "dev:web": "npx turbo run dev --filter=frontend --filter=backend --filter=ai --filter=malware",
+    "dev:mobile": "npx turbo run dev --filter=flutter-app --filter=backend --filter=ai --filter=malware",
+    "dev:ui": "npx turbo run dev --filter=frontend --filter=flutter-app",
     "dev:services": "docker compose up postgres redis",
     "build": "npx turbo run build",
     "lint": "npx turbo run lint"
