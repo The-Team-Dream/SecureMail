@@ -18,18 +18,15 @@ message EmailAnalysisRequest {
   string from_addr       = 3;
   string from_name       = 4;
   string body_text       = 5;
-
   float  spam_score      = 6;
   float  phishing_score  = 7;
   bool   is_spam         = 8;
   bool   is_phishing     = 9;
   repeated RuleHit rule_hits = 10;
-
   bool   has_attachment    = 11;
   string malware_verdict   = 12;
-  float  malware_score     = 13;
+  float  malware_score     = 13; // will remove later
   string malware_severity  = 14;
-
   int32  mailbox_id              = 15;
   int32  previous_email_count    = 16;
   string sender_typical_topic    = 17;
