@@ -1,0 +1,193 @@
+<mxfile host="Electron" version="24.4.13" type="device">
+  <diagram name="DFD Level 1" id="dfd1_securemail">
+    <mxGraphModel dx="2000" dy="2000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- ============================================== -->
+        <!-- EXTERNAL ENTITIES (Squares / Rounded=0)         -->
+        <!-- ============================================== -->
+        <mxCell id="e_user" value="User / SOC Admin" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="500" y="50" width="160" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e_providers" value="External Email Providers&#10;(IMAP / SMTP / API)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="500" y="1050" width="160" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e_malware" value="Malware Engine&#10;(Go Microservice)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1100" y="300" width="160" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e_ai" value="AI Reasoning Agent&#10;(Python Microservice)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1100" y="500" width="160" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e_threat" value="Threat Intelligence&#10;(AbuseIPDB)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1100" y="700" width="160" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e_storage" value="Cloud Storage&#10;(Cloudinary)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1100" y="900" width="160" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- ============================================== -->
+        <!-- PROCESSES (Ellipses)                           -->
+        <!-- ============================================== -->
+        <mxCell id="p_identity" value="1.0&#10;Manage Identity&#10;&amp; Configurations" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="510" y="200" width="140" height="140" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p_dashboard" value="4.0&#10;Serve Dashboard&#10;&amp; Alerts" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="250" y="350" width="140" height="140" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p_outbound" value="5.0&#10;Route Outbound&#10;Emails" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="150" y="700" width="140" height="140" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p_ingest" value="2.0&#10;Ingest &amp;&#10;Sync Emails" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="510" y="800" width="140" height="140" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p_pipeline" value="3.0&#10;Execute 10-Stage&#10;Security Pipeline" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="800" y="550" width="160" height="160" as="geometry" />
+        </mxCell>
+
+        <!-- ============================================== -->
+        <!-- DATA STORES (Partial Rectangles)               -->
+        <!-- ============================================== -->
+        <mxCell id="ds_users" value="D1: Users &amp; Auth DB" style="shape=partialRectangle;whiteSpace=wrap;html=1;left=0;right=0;fillColor=none;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="250" y="220" width="140" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ds_creds" value="D2: Credentials DB" style="shape=partialRectangle;whiteSpace=wrap;html=1;left=0;right=0;fillColor=none;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="800" y="245" width="140" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ds_emails" value="D3: Emails &amp; Attachments" style="shape=partialRectangle;whiteSpace=wrap;html=1;left=0;right=0;fillColor=none;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="510" y="550" width="140" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ds_reports" value="D4: Security Reports DB" style="shape=partialRectangle;whiteSpace=wrap;html=1;left=0;right=0;fillColor=none;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="250" y="605" width="140" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ds_queue" value="D5: Redis Job Queue" style="shape=partialRectangle;whiteSpace=wrap;html=1;left=0;right=0;fillColor=none;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="800" y="845" width="140" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- ============================================== -->
+        <!-- DATA FLOWS (Edges)                             -->
+        <!-- ============================================== -->
+        
+        <!-- User <-> P1 -->
+        <mxCell id="f_e1_p1" value="Auth &amp; Configs" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="e_user" target="p_identity">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="550" y="150" /></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="f_p1_e1" value="Tokens (JWT)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="p_identity" target="e_user">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="610" y="150" /></Array></mxGeometry>
+        </mxCell>
+
+        <!-- User <-> P4 -->
+        <mxCell id="f_e1_p4" value="Dashboard Requests" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="e_user" target="p_dashboard">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="300" y="80" /></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="f_p4_e1" value="UI Data &amp; Alerts" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="p_dashboard" target="e_user">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="340" y="80" /></Array></mxGeometry>
+        </mxCell>
+
+        <!-- User -> P5 -->
+        <mxCell id="f_e1_p5" value="Send Email Command" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="e_user" target="p_outbound">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="100" y="80" /><mxPoint x="100" y="770" /></Array></mxGeometry>
+        </mxCell>
+
+        <!-- P1 -> Data Stores -->
+        <mxCell id="f_p1_ds1" value="User Details" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="p_identity" target="ds_users">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f_p1_ds2" value="Encrypted Configs" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="p_identity" target="ds_creds">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- DS2 -> P5 -> E2 -->
+        <mxCell id="f_ds2_p5" value="SMTP Configs" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ds_creds" target="p_outbound">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="950" y="270" /><mxPoint x="950" y="770" /></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="f_p5_e2" value="SMTP Payload" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="p_outbound" target="e_providers">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="220" y="1080" /></Array></mxGeometry>
+        </mxCell>
+
+        <!-- Data Stores -> P4 -->
+        <mxCell id="f_ds3_p4" value="Read Emails" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ds_emails" target="p_dashboard">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f_ds4_p4" value="Read Reports" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ds_reports" target="p_dashboard">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- P2 <-> E2 & P2 -> Data Stores -->
+        <mxCell id="f_e2_p2" value="Raw Emails &amp; Status" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="e_providers" target="p_ingest">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="560" y="1010" /></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="f_p2_e2" value="Fetch Request" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="p_ingest" target="e_providers">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="600" y="1010" /></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="f_ds2_p2" value="IMAP/API Credentials" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ds_creds" target="p_ingest">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="750" y="270" /><mxPoint x="750" y="870" /></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="f_p2_ds3" value="Store Raw Emails" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="p_ingest" target="ds_emails">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f_p2_ds5" value="Publish Scan Jobs" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="p_ingest" target="ds_queue">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- P3 <-> Data Stores -->
+        <mxCell id="f_ds5_p3" value="Consume Jobs" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ds_queue" target="p_pipeline">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f_ds3_p3" value="Read Raw Content" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ds_emails" target="p_pipeline">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="650" y="610" /></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="f_p3_ds4" value="Final Verdict" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="p_pipeline" target="ds_reports">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="880" y="470" /><mxPoint x="480" y="470" /><mxPoint x="480" y="630" /></Array></mxGeometry>
+        </mxCell>
+
+        <!-- P3 <-> E3 (Malware) -->
+        <mxCell id="f_p3_e3" value="Binary Attachments" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="p_pipeline" target="e_malware">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1000" y="320" /></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="f_e3_p3" value="Scan Results" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="e_malware" target="p_pipeline">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1040" y="340" /><mxPoint x="1040" y="580" /></Array></mxGeometry>
+        </mxCell>
+        
+        <!-- P3 <-> E4 (AI) -->
+        <mxCell id="f_p3_e4" value="Behavior &amp; Context" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="p_pipeline" target="e_ai">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1000" y="520" /></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="f_e4_p3" value="Reasoning Report" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="e_ai" target="p_pipeline">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1040" y="540" /><mxPoint x="1040" y="650" /></Array></mxGeometry>
+        </mxCell>
+
+        <!-- P3 <-> E5 (Threats) -->
+        <mxCell id="f_p3_e5" value="IPs &amp; Domains" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="p_pipeline" target="e_threat">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1000" y="720" /></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="f_e5_p3" value="Reputation Scores" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="e_threat" target="p_pipeline">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1040" y="740" /><mxPoint x="1040" y="700" /></Array></mxGeometry>
+        </mxCell>
+
+        <!-- P3 <-> E6 (Storage) -->
+        <mxCell id="f_p3_e6" value="Save Attachments" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="p_pipeline" target="e_storage">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1000" y="920" /></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="f_e6_p3" value="Cloud URLs" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="e_storage" target="p_pipeline">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1040" y="940" /><mxPoint x="1040" y="710" /></Array></mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
