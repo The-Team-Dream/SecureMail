@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.3.0 Chrome/140.0.7339.249 Electron/38.7.2 Safari/537.36" version="29.3.0">
   <diagram name="DFD Level 1" id="dfd1_securemail">
-    <mxGraphModel dx="3012" dy="2061" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+    <mxGraphModel dx="2407" dy="1692" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -37,19 +37,19 @@
         <mxCell id="p_pipeline" parent="1" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fontStyle=1;labelBackgroundColor=default;" value="3.0&#xa;Execute 10-Stage&#xa;Security Pipeline" vertex="1">
           <mxGeometry height="160" width="160" x="200" y="630" as="geometry" />
         </mxCell>
-        <mxCell id="ds_users" parent="1" style="shape=partialRectangle;whiteSpace=wrap;html=1;left=0;right=0;fontStyle=1;labelBackgroundColor=default;" value="D1: Users &amp;amp; Auth DB" vertex="1">
+        <mxCell id="ds_users" parent="1" style="html=1;dashed=0;whiteSpace=wrap;shape=mxgraph.dfd.dataStoreID;align=left;spacingLeft=3;points=[[0,0],[0.5,0],[1,0],[0,0.5],[1,0.5],[0,1],[0.5,1],[1,1]];" value="D1&amp;nbsp; &amp;nbsp; Users &amp;amp; Auth DB" vertex="1">
           <mxGeometry height="50" width="140" x="510" y="380" as="geometry" />
         </mxCell>
-        <mxCell id="ds_creds" parent="1" style="shape=partialRectangle;whiteSpace=wrap;html=1;left=0;right=0;fontStyle=1;labelBackgroundColor=default;" value="D2: Credentials DB" vertex="1">
+        <mxCell id="ds_creds" parent="1" style="html=1;dashed=0;whiteSpace=wrap;shape=mxgraph.dfd.dataStoreID;align=left;spacingLeft=3;points=[[0,0],[0.5,0],[1,0],[0,0.5],[1,0.5],[0,1],[0.5,1],[1,1]];" value="D2&amp;nbsp; &amp;nbsp; Credentials DB" vertex="1">
           <mxGeometry height="50" width="140" x="510" y="465" as="geometry" />
         </mxCell>
-        <mxCell id="ds_emails" parent="1" style="shape=partialRectangle;whiteSpace=wrap;html=1;left=0;right=0;fontStyle=1;labelBackgroundColor=default;" value="D3: Emails &amp;amp; Attachments" vertex="1">
+        <mxCell id="ds_emails" parent="1" style="html=1;dashed=0;whiteSpace=wrap;shape=mxgraph.dfd.dataStoreID;align=left;spacingLeft=3;points=[[0,0],[0.5,0],[1,0],[0,0.5],[1,0.5],[0,1],[0.5,1],[1,1]];" value="D3&amp;nbsp; &amp;nbsp; Emails DB" vertex="1">
           <mxGeometry height="50" width="140" x="510" y="550" as="geometry" />
         </mxCell>
-        <mxCell id="ds_reports" parent="1" style="shape=partialRectangle;whiteSpace=wrap;html=1;left=0;right=0;fontStyle=1;labelBackgroundColor=default;" value="D4: Security Reports DB" vertex="1">
+        <mxCell id="ds_reports" parent="1" style="html=1;dashed=0;whiteSpace=wrap;shape=mxgraph.dfd.dataStoreID;align=left;spacingLeft=3;points=[[0,0],[0.5,0],[1,0],[0,0.5],[1,0.5],[0,1],[0.5,1],[1,1]];" value="D4&amp;nbsp; &amp;nbsp; AI Reports DB" vertex="1">
           <mxGeometry height="50" width="140" x="510" y="635" as="geometry" />
         </mxCell>
-        <mxCell id="ds_queue" parent="1" style="shape=partialRectangle;whiteSpace=wrap;html=1;left=0;right=0;fontStyle=1;labelBackgroundColor=default;" value="D5: Redis Job Queue" vertex="1">
+        <mxCell id="ds_queue" parent="1" style="html=1;dashed=0;whiteSpace=wrap;shape=mxgraph.dfd.dataStoreID;align=left;spacingLeft=3;points=[[0,0],[0.5,0],[1,0],[0,0.5],[1,0.5],[0,1],[0.5,1],[1,1]];" value="D5&amp;nbsp; &amp;nbsp; Redis Job Queue" vertex="1">
           <mxGeometry height="50" width="140" x="510" y="720" as="geometry" />
         </mxCell>
         <mxCell id="f_e1_p1" edge="1" parent="1" source="e_user" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=default;" target="p_identity" value="Auth &amp;amp; Configs">
@@ -284,6 +284,9 @@
               <mxPoint x="90" y="720" />
             </Array>
           </mxGeometry>
+        </mxCell>
+        <mxCell id="pnM3Ln--FzCSvenvjsPu-2" parent="1" style="html=1;dashed=0;whiteSpace=wrap;shape=mxgraph.dfd.dataStoreID;align=left;spacingLeft=3;points=[[0,0],[0.5,0],[1,0],[0,0.5],[1,0.5],[0,1],[0.5,1],[1,1]];" value="" vertex="1">
+          <mxGeometry height="30" width="100" x="220" y="200" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
